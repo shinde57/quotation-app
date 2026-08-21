@@ -1,0 +1,330 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --ink: #0f172a;
+    --muted: #64748b;
+    --paper: #f8fafc;
+    --line: #e2e8f0;
+    --indigo: #4f46e5;
+    --indigo-dark: #3730a3;
+    --violet: #7c3aed;
+  }
+
+  body {
+    @apply text-gray-900 antialiased;
+    background: #f8fafc;
+    color: var(--ink);
+    font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+  }
+
+  button, input, select {
+    font: inherit;
+  }
+
+  ::selection {
+    background: #bce7df;
+    color: var(--ink);
+  }
+}
+
+@layer components {
+  .app-shell {
+    background: #f8fafc;
+  }
+
+  .surface {
+    @apply bg-white border rounded-2xl shadow-sm;
+    border-color: var(--line);
+  }
+
+  .eyebrow {
+    @apply text-xs font-bold uppercase;
+    color: var(--indigo);
+    letter-spacing: 0.16em;
+  }
+
+  .page-title {
+    @apply text-3xl font-bold tracking-tight;
+    color: var(--ink);
+  }
+
+  .primary-action {
+    @apply inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold text-white transition-all shadow-sm;
+    background: var(--indigo);
+  }
+
+  .primary-action:hover {
+    background: var(--indigo-dark);
+    transform: translateY(-1px);
+  }
+
+  .field-input {
+    @apply w-full px-3 py-2.5 rounded-xl border bg-white text-sm transition-colors;
+    border-color: var(--line);
+  }
+
+  .field-input:focus {
+    @apply outline-none ring-2;
+    border-color: var(--indigo);
+    --tw-ring-color: rgba(8, 127, 123, 0.16);
+  }
+
+  .auth-stage {
+    background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+  }
+
+  .auth-card {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(226, 232, 240, 0.95);
+    box-shadow: 0 24px 70px rgba(30, 41, 59, 0.13), 0 8px 24px rgba(79, 70, 229, 0.08);
+  }
+
+  .auth-card::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 3px;
+    background: linear-gradient(90deg, #4f46e5, #7c3aed, #4f46e5);
+  }
+
+  .auth-card-glow {
+    position: absolute;
+    width: 16rem;
+    height: 16rem;
+    right: -9rem;
+    top: -9rem;
+    border-radius: 9999px;
+    background: rgba(124, 58, 237, 0.1);
+    filter: blur(8px);
+    pointer-events: none;
+  }
+
+  .quotation-card {
+    animation: quotation-card-in 200ms ease-out both;
+    transition: transform 200ms ease-out, box-shadow 200ms ease-out, border-color 200ms ease-out;
+  }
+
+  .quotation-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(79, 70, 229, 0.45);
+    box-shadow: 0 14px 28px rgba(30, 41, 59, 0.1), 0 4px 10px rgba(79, 70, 229, 0.08);
+  }
+
+  .quotation-view-action {
+    opacity: 0.72;
+    transform: translateX(-2px);
+    transition: opacity 200ms ease-out, transform 200ms ease-out, background-color 200ms ease-out;
+  }
+
+  .quotation-card:hover .quotation-view-action,
+  .quotation-view-action:focus-visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .quotation-more-action {
+    opacity: 0.55;
+    transition: opacity 200ms ease-out, transform 200ms ease-out;
+  }
+
+  .quotation-card:hover .quotation-more-action {
+    opacity: 1;
+    transform: rotate(90deg);
+  }
+
+  .quotation-arrow {
+    transition: transform 200ms ease-out;
+  }
+
+  .quotation-card:hover .quotation-arrow {
+    transform: translateX(3px);
+  }
+
+  .kpi-card {
+    @apply rounded-2xl border bg-white p-5 shadow-sm;
+    border-color: var(--line);
+  }
+
+  .kpi-label { @apply text-sm font-semibold; color: var(--muted); }
+  .kpi-value { @apply mt-4 text-3xl font-bold tracking-tight; color: var(--ink); }
+  .kpi-trend { @apply mt-3 flex items-center gap-1.5 text-xs font-semibold; }
+  .kpi-trend.positive { color: #059669; }
+  .kpi-trend.warning { color: #d97706; }
+  .kpi-icon { @apply flex h-9 w-9 items-center justify-center rounded-xl; }
+  .kpi-icon.indigo { @apply bg-indigo-50 text-indigo-600; }
+  .kpi-icon.green { @apply bg-emerald-50 text-emerald-600; }
+  .kpi-icon.amber { @apply bg-amber-50 text-amber-600; }
+  .kpi-icon.violet { @apply bg-violet-50 text-violet-600; }
+
+  .featured-quotation {
+    @apply overflow-hidden rounded-2xl p-6 text-white shadow-sm sm:p-7;
+    background: linear-gradient(115deg, #0f172a, #1e1b4b 68%, #312e81);
+  }
+
+  .featured-label { @apply text-[11px] font-bold uppercase tracking-[0.12em] text-slate-500; }
+  .featured-value { @apply mt-2 text-sm font-semibold text-white; }
+  .featured-amount { @apply mt-2 text-xl font-bold text-white; }
+  .featured-button { @apply inline-flex items-center gap-2 rounded-xl bg-indigo-500 px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-indigo-400; }
+  .featured-secondary { @apply rounded-xl border border-white/15 px-4 py-2.5 text-sm font-bold text-slate-300 transition-colors hover:bg-white/10 hover:text-white; }
+
+  .menu-action { @apply flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold text-slate-600 transition-colors hover:bg-slate-50 hover:text-indigo-600; }
+  .menu-action.danger { @apply text-red-600 hover:bg-red-50 hover:text-red-700; }
+  .status-pulse { animation: status-pulse 2.4s ease-in-out infinite; }
+  .skeleton-line { background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%); background-size: 200% 100%; animation: skeleton-shimmer 1.4s ease-in-out infinite; }
+  .empty-document { animation: empty-document-float 3s ease-in-out infinite; }
+  .delete-card-overlay { @apply absolute inset-0 z-10 flex flex-col items-center justify-center rounded-2xl bg-white/95; }
+  .card-deleting { animation: card-delete-out 650ms ease-in forwards; pointer-events: none; }
+  .toast-notification { @apply fixed bottom-6 right-6 z-50 flex items-center gap-3 rounded-xl border border-emerald-100 bg-white px-4 py-3 text-sm font-bold text-emerald-700 shadow-xl shadow-slate-300/30; animation: toast-in 220ms ease-out both; }
+  .toast-notification.error { @apply border-red-100 text-red-700; }
+
+  .quotation-search {
+    transition: border-color 180ms ease-out, box-shadow 180ms ease-out, transform 180ms ease-out;
+  }
+
+  .quotation-search:focus-within {
+    border-color: rgba(79, 70, 229, 0.75);
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+    transform: scale(1.01);
+  }
+
+  .quotation-search:focus-within .quotation-search-icon {
+    color: #4f46e5;
+    transform: scale(1.08) rotate(-8deg);
+  }
+
+  .quotation-search-icon { transition: color 180ms ease-out, transform 180ms ease-out; }
+
+  .filter-menu { animation: filter-menu-in 150ms ease-out both; transform-origin: top right; }
+  .delete-modal { animation: delete-modal-in 180ms ease-out both; }
+  .delete-success-icon { animation: delete-check-in 300ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+  @keyframes filter-menu-in {
+    from { opacity: 0; transform: translateY(-5px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  @keyframes delete-modal-in {
+    from { opacity: 0; transform: translateY(8px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  @keyframes delete-check-in {
+    from { opacity: 0; transform: scale(0.55) rotate(-12deg); }
+    to { opacity: 1; transform: scale(1) rotate(0); }
+  }
+
+  @keyframes quotation-card-in {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes status-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.25); }
+    50% { box-shadow: 0 0 0 4px rgba(245, 158, 11, 0); }
+  }
+
+  @keyframes skeleton-shimmer { to { background-position: -200% 0; } }
+  @keyframes empty-document-float { 50% { transform: translateY(-5px) rotate(1deg); } }
+  @keyframes card-delete-out { to { opacity: 0; transform: scale(0.94); } }
+  @keyframes toast-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  .brand-blob {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(2px);
+    opacity: 0.52;
+    animation: drift 14s ease-in-out infinite alternate;
+  }
+
+  .brand-blob-one {
+    width: 21rem;
+    height: 21rem;
+    top: -7rem;
+    right: -5rem;
+    background: radial-gradient(circle at 35% 35%, rgba(124, 58, 237, 0.75), rgba(79, 70, 229, 0.06) 68%);
+  }
+
+  .brand-blob-two {
+    width: 18rem;
+    height: 18rem;
+    bottom: -7rem;
+    left: -5rem;
+    background: radial-gradient(circle at 60% 40%, rgba(79, 70, 229, 0.58), rgba(55, 48, 163, 0.04) 70%);
+    animation-delay: -5s;
+  }
+
+  .brand-grid {
+    background-image: linear-gradient(rgba(148, 163, 184, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
+    background-size: 42px 42px;
+    mask-image: linear-gradient(to bottom, transparent, black 24%, black 76%, transparent);
+  }
+
+  .brand-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .brand-float-delay {
+    animation: float 7s ease-in-out -2.4s infinite;
+  }
+
+  .brand-pulse {
+    animation: pulse-ring 4s ease-out infinite;
+  }
+
+  .login-brand-entrance {
+    animation: login-fade-in 650ms ease-out both;
+  }
+
+  .login-logo-entrance {
+    animation: login-logo-in 650ms cubic-bezier(0.22, 1, 0.36, 1) 80ms both;
+  }
+
+  .login-form-entrance {
+    animation: login-form-in 600ms cubic-bezier(0.22, 1, 0.36, 1) 80ms both;
+  }
+
+  @keyframes drift {
+    from { transform: translate3d(-10px, 8px, 0) scale(0.94); }
+    to { transform: translate3d(18px, -14px, 0) scale(1.08); }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(-3deg); }
+    50% { transform: translateY(-14px) rotate(3deg); }
+  }
+
+  @keyframes pulse-ring {
+    0% { transform: scale(0.72); opacity: 0.7; }
+    70%, 100% { transform: scale(1.38); opacity: 0; }
+  }
+
+  @keyframes login-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes login-logo-in {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes login-form-in {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .login-brand-entrance, .login-logo-entrance, .login-form-entrance,
+    .brand-blob, .brand-float, .brand-float-delay, .brand-pulse {
+      animation: none;
+    }
+  }
+
+  @media print {
+    body { background: white; }
+  }
+}

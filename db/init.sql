@@ -1,7 +1,11 @@
 -- Supabase DB initialization for Quotation App
 create extension if not exists "pgcrypto";
 
-create table if not exists quotations (
+-- Drop existing tables to recreate them with the correct schema
+drop table if exists quotation_items;
+drop table if exists quotations;
+
+create table quotations (
   id uuid primary key default gen_random_uuid(),
   quotation_number text,
   customer_name text not null,
@@ -10,15 +14,18 @@ create table if not exists quotations (
   phone text,
   quotation_date date not null,
   valid_until date,
-  subtotal numeric,
-  gst numeric,
-  total numeric,
-  created_at timestamptz default now()
+  subtotal numeric not null,
+  gst_percent numeric not null default 18,
+  gst numeric not null,
+  total numeric not null,
+  status text not null default 'pending' check (status in ('approved', 'pending', 'draft', 'rejected')),
+  created_at timestamptz default now(),
+  user_id uuid not null references auth.users(id) on delete cascade
 );
 
-create table if not exists quotation_items (
+create table quotation_items (
   id uuid primary key default gen_random_uuid(),
-  quotation_id uuid references quotations(id) on delete cascade,
+  quotation_id uuid not null references quotations(id) on delete cascade,
   product_name text not null,
   quantity integer not null,
   unit_price numeric not null,
@@ -26,7 +33,49 @@ create table if not exists quotation_items (
   amount numeric not null
 );
 
--- Optional: simple policies (uncomment and adapt if RLS enabled)
--- alter table quotations enable row level security;
--- create policy "allow authenticated" on quotations
---   for all using (auth.role() = 'authenticated');
+-- Enable Row Level Security
+alter table quotations enable row level security;
+alter table quotation_items enable row level security;
+
+-- Policies for quotations
+create policy "Users can view their own quotations" 
+  on quotations for select 
+  using (auth.uid() = user_id);
+
+create policy "Users can insert their own quotations" 
+  on quotations for insert 
+  with check (auth.uid() = user_id);
+
+create policy "Users can update their own quotations" 
+  on quotations for update 
+  using (auth.uid() = user_id);
+
+create policy "Users can delete their own quotations" 
+  on quotations for delete 
+  using (auth.uid() = user_id);
+
+-- Policies for quotation_items
+-- Users can manage items if they own the parent quotation
+create policy "Users can view items of their quotations" 
+  on quotation_items for select 
+  using (exists (
+    select 1 from quotations where quotations.id = quotation_items.quotation_id and quotations.user_id = auth.uid()
+  ));
+
+create policy "Users can insert items for their quotations" 
+  on quotation_items for insert 
+  with check (exists (
+    select 1 from quotations where quotations.id = quotation_items.quotation_id and quotations.user_id = auth.uid()
+  ));
+
+create policy "Users can update items of their quotations" 
+  on quotation_items for update 
+  using (exists (
+    select 1 from quotations where quotations.id = quotation_items.quotation_id and quotations.user_id = auth.uid()
+  ));
+
+create policy "Users can delete items of their quotations" 
+  on quotation_items for delete 
+  using (exists (
+    select 1 from quotations where quotations.id = quotation_items.quotation_id and quotations.user_id = auth.uid()
+  ));

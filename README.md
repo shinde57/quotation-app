@@ -1,56 +1,102 @@
-# Quotation App
+# Software Quotation Management System
 
-Simple Next.js + TypeScript quotation management app scaffold.
+A production-ready, full-stack web application for creating, managing, and printing professional software quotations. Built with Next.js, Tailwind CSS, and Supabase.
 
-Setup
+## Overview
 
-1. Copy `.env.local.example` to `.env.local` and set Supabase variables.
-2. Install dependencies:
+This application provides an authenticated experience where users can securely manage their business quotations. It features real-time financial calculations, a responsive modern UI, Row Level Security (RLS) for data privacy, and a professional invoice-like view for printing or saving as PDF.
 
-```bash
-npm install
+## Features
+
+- **Secure Authentication**: Register and login using Supabase Auth.
+- **Quotation Management**: Create, view, list, and delete quotations.
+- **Dynamic Products**: Add multiple products/services to a single quotation with individual quantities, unit prices, and discounts.
+- **Automatic Calculations**: Instantly calculates gross amounts, net amounts, subtotal, 18% GST, and grand total without floating-point errors.
+- **Professional Invoice View**: A sleek, print-ready detail page designed like a real company invoice.
+- **Data Privacy**: Supabase Row Level Security ensures users can only access their own data.
+- **Responsive Design**: Fully responsive across mobile, tablet, and desktop viewports using Tailwind CSS.
+
+## Technology Stack
+
+- **Frontend**: [Next.js](https://nextjs.org/) (Pages Router)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **Backend/Database**: [Supabase](https://supabase.com/) (PostgreSQL)
+- **Authentication**: Supabase Auth
+
+## Project Structure
+
+```
+.
+├── src/
+│   ├── layouts/         # Shared layouts (AuthGuard, MainLayout)
+│   ├── lib/             # Supabase client configuration
+│   ├── pages/           # Next.js routes (Auth, Dashboard, Create, View)
+│   ├── styles/          # Global Tailwind CSS
+│   ├── types/           # TypeScript interfaces
+│   └── utils/           # Pure functions for calculations and validation
+├── db/
+│   └── init.sql         # Database schema and RLS policies
+├── public/              # Static assets
+└── tailwind.config.js   # Tailwind configuration
 ```
 
-3. Run dev server:
+## Supabase Setup
 
-```bash
-npm run dev
+1. **Create a Supabase Project**: Go to [Supabase](https://supabase.com/) and create a new project.
+2. **Execute Database Schema**: 
+   - Navigate to the **SQL Editor** in your Supabase dashboard.
+   - Copy the contents of `db/init.sql`.
+   - Run the script to create the `quotations` and `quotation_items` tables, enable Row Level Security, and set up policies.
+3. **Configure Authentication**: Authentication is handled by default via email/password. No extra setup required unless you want to disable email confirmations (useful for testing).
+
+If the database was created before GST selection was added, run this once in the Supabase SQL Editor:
+
+```sql
+alter table quotations add column if not exists gst_percent numeric not null default 18;
+alter table quotations add column if not exists status text not null default 'pending';
 ```
 
-4. Create tables in Supabase using the provided SQL (see project specification).
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Installation & Running Locally
 
-## Getting Started
+1. Clone the repository and install dependencies:
+   ```bash
+   npm install
+   ```
 
-First, run the development server:
+2. Create a `.env.local` file by copying the example:
+   ```bash
+   cp .env.local.example .env.local
+   ```
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+3. Add your Supabase credentials to `.env.local`:
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+   ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Deployment
 
-## Learn More
+This project is optimized for deployment on [Vercel](https://vercel.com).
 
-To learn more about Next.js, take a look at the following resources:
+1. Push your code to a GitHub repository.
+2. Go to Vercel and import the repository.
+3. Add the following Environment Variables in the Vercel dashboard:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+4. Click **Deploy**. Vercel will automatically build and deploy the Next.js application.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Test Credentials
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+(Add your test credentials here after deploying so reviewers can easily test the app)
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Email**: `test@example.com`
+- **Password**: `password123`
