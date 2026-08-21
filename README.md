@@ -51,12 +51,7 @@ This application provides an authenticated experience where users can securely m
    - Run the script to create the `quotations` and `quotation_items` tables, enable Row Level Security, and set up policies.
 3. **Configure Authentication**: Authentication is handled by default via email/password. No extra setup required unless you want to disable email confirmations (useful for testing).
 
-If the database was created before GST selection was added, run this once in the Supabase SQL Editor:
-
-```sql
-alter table quotations add column if not exists gst_percent numeric not null default 18;
-alter table quotations add column if not exists status text not null default 'pending';
-```
+If the database was created before GST selection or quotation statuses were added, run `db/upgrade_quotations_status.sql` in the Supabase SQL Editor. It adds the missing `status` column, backfills existing rows, enforces the supported values, and reloads the PostgREST schema cache.
 
 ## Installation & Running Locally
 
